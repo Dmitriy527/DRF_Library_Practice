@@ -6,6 +6,32 @@ from borrowings.models import Borrowing
 from user.models import User
 
 
+class BorrowingReturnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borrowing
+        fields = [
+            "actual_return",
+        ]
+
+    def validate_actual_return(self, value):
+        instance = self.instance
+
+        if instance.actual_return is not None:
+            raise ValidationError(
+                {"message": f"Book already returned on {instance.actual_return}"}
+            )
+
+        if value is None:
+            raise serializers.ValidationError(f"Return date cannot be None")
+
+        if value < instance.borrow_date:
+            raise serializers.ValidationError(
+                f"Return date cannot be earlier than borrow date ({instance.borrow_date})"
+            )
+
+        return value
+
+
 class BorrowingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
