@@ -9,7 +9,7 @@ from borrowings.serializers import (
 
 class BorrowingsViewSet(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == "GET":
