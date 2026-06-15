@@ -11,6 +11,11 @@ urlpatterns = [
     path(
         "borrowings/<int:pk>/", views.BorrowingsReadViewSet.as_view(), name="borrowing"
     ),
+    path(
+        "borrowings/<int:pk>/return/",
+        views.BorrowingsReturnViewSet.as_view(),
+        name="return_borrowing",
+    ),
 ]
 
 app_name = "borrowings"

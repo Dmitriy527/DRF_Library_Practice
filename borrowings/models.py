@@ -41,7 +41,15 @@ class Borrowing(models.Model):
             self.book_id.inventory -= 1
             self.book_id.save()
 
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
+        else:
+            old_instance = Borrowing.objects.get(pk=self.pk)
+
+            if old_instance.actual_return is None:
+                self.book_id.inventory += 1
+                self.book_id.save()
+
+            super().save(*args, **kwargs)
 
     def clean(self):
         errors = {}
