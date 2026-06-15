@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 from book.models import Book
@@ -29,6 +29,19 @@ class Borrowing(models.Model):
                     "book": f"Book '{book_instance.title}' has no copies available (inventory: {book_instance.inventory})"
                 }
             )
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+
+        is_new = self.pk is None
+
+        if is_new:
+            self.full_clean()
+
+            self.book_id.inventory -= 1
+            self.book_id.save()
+
+        super().save(*args, **kwargs)
 
     def clean(self):
         errors = {}
