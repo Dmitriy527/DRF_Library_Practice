@@ -21,6 +21,15 @@ class Borrowing(models.Model):
         related_name="borrowing",
     )
 
+    @classmethod
+    def validate_inventory(cls, book_instance: Book, error_to_raise) -> None:
+        if book_instance.inventory < 1:
+            raise error_to_raise(
+                {
+                    "book": f"Book '{book_instance.title}' has no copies available (inventory: {book_instance.inventory})"
+                }
+            )
+
     def clean(self):
         errors = {}
 
