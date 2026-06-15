@@ -20,11 +20,30 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             queryset=User.objects.all(), required=True
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get("request")
+
+        if request and not request.user.is_staff:
+            self.fields["user_id"].queryset = User.objects.filter(id=request.user.id)
+            self.fields["user_id"].initial = request.user.id
+        else:
+            self.fields["user_id"].queryset = User.objects.all()
+
+    def validate_user_id(self, value):
+        request = self.context.get("request")
+
+        if request and not request.user.is_staff:
+            if value.id != request.user.id:
+                raise serializers.ValidationError(
+                    "A regular user can create loans only for themselves"
+                )
+        return value
 
     def create(self, validated_data):
         try:
-            borrowing = Borrowing.objects.create(**validated_data)
-            return borrowing
+            return Borrowing.objects.create(**validated_data)
         except ValidationError as e:
             raise serializers.ValidationError(e.message_dict)
 
