@@ -1,10 +1,34 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 
 from borrowings.models import Borrowing
 from borrowings.serializers import (
-    BorrowingReadSerializer, BorrowingCreateSerializer,
+    BorrowingReadSerializer, BorrowingCreateSerializer, BorrowingReturnSerializer,
 )
+
+
+class BorrowingsReturnViewSet(generics.UpdateAPIView):
+    queryset = Borrowing.objects.all()
+    serializer_class = BorrowingReturnSerializer
+    permission_classes = [
+        IsAdminUser,
+    ]
+
+    def get(self, request, *args, **kwargs):
+        borrowing = self.get_object()
+
+        if borrowing.actual_return:
+            message = f"Book already returned on {borrowing.actual_return}"
+        else:
+            message = "Please enter return date"
+
+        return Response(
+            {
+                "message": message,
+            }
+        )
+
 
 
 class BorrowingsViewSet(generics.ListCreateAPIView):
