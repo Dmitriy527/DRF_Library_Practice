@@ -130,12 +130,12 @@ class BorrowingsViewSet(generics.ListCreateAPIView):
             user_id = self._params_to_ints(user_id)
             queryset = queryset.filter(user_id__in=user_id)
         if is_active:
-            if is_active is not None:
+            if is_active:
                 if is_active.lower() == "true":
                     queryset = queryset.filter(actual_return__isnull=True)
                 elif is_active.lower() == "false":
                     queryset = queryset.filter(actual_return__isnull=False)
-        if self.request.user.is_staff is False:
+        if not self.request.user.is_staff:
             queryset = queryset.filter(user_id=current_user_id)
 
         return queryset.distinct()

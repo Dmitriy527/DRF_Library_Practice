@@ -16,7 +16,7 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
     def validate_actual_return(self, value):
         instance = self.instance
 
-        if instance.actual_return is not None:
+        if instance.actual_return:
             raise ValidationError(
                 {"message": f"Book already returned on {instance.actual_return}"}
             )

@@ -33,7 +33,7 @@ class Borrowing(models.Model):
     @transaction.atomic
     def save(self, *args, **kwargs):
 
-        is_new = self.pk is None
+        is_new = not self.pk
 
         if is_new:
             self.full_clean()
@@ -45,7 +45,7 @@ class Borrowing(models.Model):
         else:
             old_instance = Borrowing.objects.get(pk=self.pk)
 
-            if old_instance.actual_return is None:
+            if not old_instance.actual_return:
                 self.book_id.inventory += 1
                 self.book_id.save()
 
