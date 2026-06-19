@@ -1,5 +1,10 @@
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiExample,
+    extend_schema_view,
+)
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -15,9 +20,7 @@ from borrowings.serializers import (
 class BorrowingsReturnViewSet(generics.UpdateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingReturnSerializer
-    permission_classes = [
-        IsAdminUser,
-    ]
+    permission_classes = [IsAdminUser]
 
     def get(self, request, *args, **kwargs):
         borrowing = self.get_object()
@@ -33,8 +36,9 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
             }
         )
 
+
 @extend_schema_view(
-    get = extend_schema(
+    get=extend_schema(
         responses={200: BorrowingReadSerializer(many=True)},
         parameters=[
             OpenApiParameter(
@@ -46,7 +50,10 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
                     OpenApiExample(
                         "Example",
                         summary="user_id = 1,2",
-                        description="You must enter the user ID number or numbers separated by commas.",
+                        description=(
+                            "You must enter the user ID number or numbers "
+                            "separated by commas."
+                        ),
                         value="1,2",
                     ),
                 ],
@@ -55,18 +62,27 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
                 name="is_active",
                 type=OpenApiTypes.BOOL,
                 location=OpenApiParameter.QUERY,
-                description="Filtering by users whose loan status is active or inactive",
+                description=(
+                    "Filtering by users whose loan status is active or "
+                    "inactive"
+                ),
                 examples=[
                     OpenApiExample(
                         "Example 1",
                         summary="is_active = true",
-                        description="You need to enter whether the loan is active - true",
+                        description=(
+                            "You need to enter whether the loan is active - "
+                            "true"
+                        ),
                         value="true",
                     ),
                     OpenApiExample(
                         "Example 2",
                         summary="is_active = false",
-                        description="You need to enter whether the loan is inactive - false",
+                        description=(
+                            "You need to enter whether the loan is inactive -"
+                            " false"
+                        ),
                         value="false",
                     ),
                 ],
@@ -78,12 +94,14 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
         examples=[
             OpenApiExample(
                 "Description how to use the parameters",
-                description="In this route, at the very end, after the question mark,"
-                            + "separated by an ampersand, you can specify the following "
-                            + "parameters: page, is_active, and user_id. The page and "
-                            + "is_active parameters can change what is displayed for "
-                            + "any registered user, while the user_id parameter will change"
-                            + " what is displayed only if the user is an administrator.",
+                description=(
+                    "In this route, at the very end, after the question mark, "
+                    "separated by an ampersand, you can specify the following "
+                    "parameters: page, is_active, and user_id. The page and "
+                    "is_active parameters can change what is displayed for any"
+                    " registered user, while the user_id parameter will change"
+                    " what is displayed only if the user is an administrator."
+                ),
                 value={
                     "id": 1,
                     "borrow_date": "2026-06-19",
@@ -95,17 +113,17 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
                         "author": "Jamse Kameron",
                         "cover": "Hard",
                         "inventory": 6,
-                        "daily_fee": "1.00"
+                        "daily_fee": "1.00",
                     },
-                    "user_id": 3
+                    "user_id": 3,
                 },
             ),
         ],
     ),
-    post = extend_schema(
+    post=extend_schema(
         responses={201: BorrowingCreateSerializer},
-        description="Create a new borrowing"
-    )
+        description="Create a new borrowing",
+    ),
 )
 class BorrowingsViewSet(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
@@ -129,12 +147,13 @@ class BorrowingsViewSet(generics.ListCreateAPIView):
         if user_id:
             user_id = self._params_to_ints(user_id)
             queryset = queryset.filter(user_id__in=user_id)
+
         if is_active:
-            if is_active:
-                if is_active.lower() == "true":
-                    queryset = queryset.filter(actual_return__isnull=True)
-                elif is_active.lower() == "false":
-                    queryset = queryset.filter(actual_return__isnull=False)
+            if is_active.lower() == "true":
+                queryset = queryset.filter(actual_return__isnull=True)
+            elif is_active.lower() == "false":
+                queryset = queryset.filter(actual_return__isnull=False)
+
         if not self.request.user.is_staff:
             queryset = queryset.filter(user_id=current_user_id)
 
@@ -144,6 +163,4 @@ class BorrowingsViewSet(generics.ListCreateAPIView):
 class BorrowingsReadViewSet(generics.RetrieveAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingReadSerializer
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsAuthenticated]

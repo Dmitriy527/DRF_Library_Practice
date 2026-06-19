@@ -12,14 +12,17 @@ User = get_user_model()
 
 
 def create_user(email="user@test.com", password="testpass123", is_staff=False):
-    return User.objects.create_user(email=email, password=password, is_staff=is_staff)
+    return User.objects.create_user(email=email, password=password,
+                                    is_staff=is_staff)
 
 
 def create_admin(email="admin@test.com", password="adminpass123"):
-    return User.objects.create_user(email=email, password=password, is_staff=True)
+    return User.objects.create_user(email=email, password=password,
+                                    is_staff=True)
 
 
-def create_borrowing(user, book, borrow_date=None, expected_return=None, actual_return=None):
+def create_borrowing(user, book, borrow_date=None,
+                     expected_return=None, actual_return=None):
     return Borrowing.objects.create(
         user_id=user,
         book_id=book,
@@ -52,7 +55,8 @@ class BorrowingsViewSetListTests(APITestCase):
         )
 
         self.b1 = create_borrowing(self.user1, self.book)
-        self.b2 = create_borrowing(self.user2, self.book, actual_return=date.today())
+        self.b2 = create_borrowing(self.user2, self.book,
+                                   actual_return=date.today())
 
     # -- authentication -------------------------------------------------------
 
@@ -92,7 +96,8 @@ class BorrowingsViewSetListTests(APITestCase):
 
     def test_filter_by_multiple_user_ids(self):
         self.client.force_authenticate(user=self.admin)
-        response = self.client.get(self.url, {"user_id": f"{self.user1.id},{self.user2.id}"})
+        response = self.client.get(self.url, {"user_id": f"{self.user1.id},"
+                                                         + f"{self.user2.id}"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         ids = [b["id"] for b in response.data["results"]]
         self.assertIn(self.b1.id, ids)
@@ -149,7 +154,10 @@ class BorrowingsViewSetCreateTests(APITestCase):
         }
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Borrowing.objects.filter(user_id=self.user, book_id=self.book).count(), 1)
+        self.assertEqual(Borrowing.objects.filter(
+            user_id=self.user,
+            book_id=self.book).count(),
+            1)
 
     def test_uses_create_serializer_for_post(self):
         """POST should use BorrowingCreateSerializer."""
@@ -184,7 +192,8 @@ class BorrowingsReadViewSetTests(APITestCase):
             cover="HARD"
         )
         self.borrowing = create_borrowing(self.user, self.book)
-        self.url = reverse("borrowings:borrowing", kwargs={"pk": self.borrowing.pk})
+        self.url = reverse("borrowings:borrowing",
+                           kwargs={"pk": self.borrowing.pk})
 
     def test_unauthenticated_returns_401(self):
         response = self.client.get(self.url)
@@ -227,7 +236,8 @@ class BorrowingsReturnViewSetTests(APITestCase):
             cover="SOFT"
         )
         self.borrowing = create_borrowing(self.user, self.book)
-        self.url = reverse("borrowings:return_borrowing", kwargs={"pk": self.borrowing.pk})
+        self.url = reverse("borrowings:return_borrowing",
+                           kwargs={"pk": self.borrowing.pk})
 
     # -- permissions ---------------------------------------------------------
 
@@ -275,5 +285,6 @@ class BorrowingsReturnViewSetTests(APITestCase):
         self.borrowing.save()
 
         self.client.force_authenticate(user=self.admin)
-        response = self.client.patch(self.url, {"actual_return": str(date.today())})
+        response = self.client.patch(self.url,
+                                     {"actual_return": str(date.today())})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

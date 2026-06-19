@@ -18,15 +18,17 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
 
         if instance.actual_return:
             raise ValidationError(
-                {"message": f"Book already returned on {instance.actual_return}"}
+                {"message": "Book already returned "
+                            + f"on {instance.actual_return}"}
             )
 
         if value is None:
-            raise serializers.ValidationError(f"Return date cannot be None")
+            raise serializers.ValidationError("Return date cannot be None")
 
         if value < instance.borrow_date:
             raise serializers.ValidationError(
-                f"Return date cannot be earlier than borrow date ({instance.borrow_date})"
+                "Return date cannot be earlier than "
+                + f"borrow date ({instance.borrow_date})"
             )
 
         return value
@@ -52,7 +54,9 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         if request and not request.user.is_staff:
-            self.fields["user_id"].queryset = User.objects.filter(id=request.user.id)
+            self.fields["user_id"].queryset = User.objects.filter(
+                id=request.user.id
+            )
             self.fields["user_id"].initial = request.user.id
         else:
             self.fields["user_id"].queryset = User.objects.all()

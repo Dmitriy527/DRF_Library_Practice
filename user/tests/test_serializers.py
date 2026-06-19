@@ -155,7 +155,8 @@ class UserSerializerSerializationTests(TestCase):
         self.assertIn("is_staff", data)
 
     def test_is_staff_defaults_to_false(self):
-        user = User.objects.create_user(email="staff@example.com", password="pass12345")
+        user = User.objects.create_user(email="staff@example.com",
+                                        password="pass12345")
         serializer = UserSerializer(user)
 
         self.assertFalse(serializer.data["is_staff"])

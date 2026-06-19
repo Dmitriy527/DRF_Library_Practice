@@ -120,4 +120,5 @@ class BookModelTest(TestCase):
     # --- Meta ---
 
     def test_verbose_name_plural(self):
-        self.assertEqual(Book._meta.verbose_name_plural, "Books")
+        self.assertEqual(Book._meta.verbose_name_plural,
+                         "Books")

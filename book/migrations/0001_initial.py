@@ -33,7 +33,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("inventory", models.PositiveIntegerField(default=0)),
-                ("daily_fee", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("daily_fee", models.DecimalField(decimal_places=2,
+                                                  max_digits=5)),
             ],
             options={
                 "verbose_name_plural": "Books",

@@ -24,7 +24,14 @@ class BookReadSerializerTest(TestCase):
 
     def test_contains_all_expected_fields(self):
         serializer = BookReadSerializer(self.book)
-        expected_fields = {"id", "title", "author", "cover", "inventory", "daily_fee"}
+        expected_fields = {
+            "id",
+            "title",
+            "author",
+            "cover",
+            "inventory",
+            "daily_fee"
+        }
         self.assertEqual(set(serializer.data.keys()), expected_fields)
 
     def test_title_field_value(self):
@@ -45,7 +52,8 @@ class BookReadSerializerTest(TestCase):
 
     def test_daily_fee_field_value(self):
         serializer = BookReadSerializer(self.book)
-        self.assertEqual(Decimal(serializer.data["daily_fee"]), self.book.daily_fee)
+        self.assertEqual(Decimal(serializer.data["daily_fee"]),
+                         self.book.daily_fee)
 
     def test_valid_data_creates_book(self):
         data = {
@@ -115,7 +123,8 @@ class BookListSerializerTest(TestCase):
 
     def test_contains_only_id_title_author_fields(self):
         serializer = BookListSerializer(self.book)
-        self.assertEqual(set(serializer.data.keys()), {"id", "title", "author"})
+        self.assertEqual(set(serializer.data.keys()),
+                         {"id", "title", "author"})
 
     def test_does_not_contain_cover_inventory_daily_fee(self):
         serializer = BookListSerializer(self.book)

@@ -41,7 +41,6 @@ class UnauthenticatedBookApiTests(APITestCase):
 
     def test_list_uses_list_serializer(self):
         """List action returns data matching BookListSerializer."""
-        book = sample_book()
 
         response = self.client.get(BOOKS_URL)
 
@@ -207,7 +206,8 @@ class AdminBookApiTests(APITestCase):
         book = sample_book()
         payload = {"title": "Updated Title", "inventory": 20}
 
-        response = self.client.patch(detail_url(book.id), payload, format='json')
+        response = self.client.patch(detail_url(book.id), payload,
+                                     format='json')
 
         book.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)

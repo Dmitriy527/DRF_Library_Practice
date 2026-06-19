@@ -25,7 +25,8 @@ def make_user(email="user@test.com"):
     return User.objects.create_user(email=email, password="testpass123")
 
 
-def make_borrowing(book, user, days_ahead=1, expected_days=7, actual_return=None):
+def make_borrowing(book, user, days_ahead=1,
+                   expected_days=7, actual_return=None):
     today = timezone.localdate()
     return Borrowing(
         borrow_date=today + timedelta(days=days_ahead),
@@ -173,7 +174,8 @@ class BorrowingSaveUpdateTest(TestCase):
 
     def test_atomic_transaction_rolls_back_on_error(self):
         inventory_before = self.book.inventory
-        with patch.object(Borrowing, "full_clean", side_effect=ValidationError("err")):
+        with patch.object(Borrowing, "full_clean",
+                          side_effect=ValidationError("err")):
             new_b = make_borrowing(self.book, self.user)
             try:
                 new_b.save()

@@ -26,7 +26,9 @@ class Borrowing(models.Model):
         if book_instance.inventory < 1:
             raise error_to_raise(
                 {
-                    "book": f"Book '{book_instance.title}' has no copies available (inventory: {book_instance.inventory})"
+                    "book": f"Book '{book_instance.title}' "
+                            + "has no copies available (inventory:"
+                            + f" {book_instance.inventory})"
                 }
             )
 
@@ -65,7 +67,8 @@ class Borrowing(models.Model):
 
         if self.actual_return and self.borrow_date:
             if self.actual_return < self.borrow_date:
-                errors["actual_return"] = "Actual return cannot be before borrow date."
+                errors["actual_return"] = ("Actual return cannot "
+                                           + "be before borrow date.")
 
         if errors:
             raise ValidationError(errors)

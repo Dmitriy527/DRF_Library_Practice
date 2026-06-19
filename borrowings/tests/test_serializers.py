@@ -207,7 +207,10 @@ class BorrowingCreateSerializerInitTests(TestCase):
         )
 
     def test_regular_user_gets_restricted_queryset(self):
-        """Non-staff users should only see themselves in the user_id queryset."""
+        """
+        Non-staff users should only see themselves
+        in the user_id queryset.
+        """
         from django.contrib.auth import get_user_model
         User = get_user_model()
 

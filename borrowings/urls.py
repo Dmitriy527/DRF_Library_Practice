@@ -7,9 +7,12 @@ routers = routers.DefaultRouter()
 
 urlpatterns = [
     path("", include(routers.urls)),
-    path("borrowings/", views.BorrowingsViewSet.as_view(), name="create_borrowing"),
+    path("borrowings/", views.BorrowingsViewSet.as_view(),
+         name="create_borrowing"),
     path(
-        "borrowings/<int:pk>/", views.BorrowingsReadViewSet.as_view(), name="borrowing"
+        "borrowings/<int:pk>/",
+        views.BorrowingsReadViewSet.as_view(),
+        name="borrowing"
     ),
     path(
         "borrowings/<int:pk>/return/",
