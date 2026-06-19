@@ -1,10 +1,14 @@
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
 from borrowings.serializers import (
-    BorrowingReadSerializer, BorrowingCreateSerializer, BorrowingReturnSerializer,
+    BorrowingReadSerializer,
+    BorrowingCreateSerializer,
+    BorrowingReturnSerializer,
 )
 
 
@@ -29,8 +33,80 @@ class BorrowingsReturnViewSet(generics.UpdateAPIView):
             }
         )
 
-
-
+@extend_schema_view(
+    get = extend_schema(
+        responses={200: BorrowingReadSerializer(many=True)},
+        parameters=[
+            OpenApiParameter(
+                name="user_id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Filter by user_id",
+                examples=[
+                    OpenApiExample(
+                        "Example",
+                        summary="user_id = 1,2",
+                        description="You must enter the user ID number or numbers separated by commas.",
+                        value="1,2",
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name="is_active",
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description="Filtering by users whose loan status is active or inactive",
+                examples=[
+                    OpenApiExample(
+                        "Example 1",
+                        summary="is_active = true",
+                        description="You need to enter whether the loan is active - true",
+                        value="true",
+                    ),
+                    OpenApiExample(
+                        "Example 2",
+                        summary="is_active = false",
+                        description="You need to enter whether the loan is inactive - false",
+                        value="false",
+                    ),
+                ],
+            ),
+        ],
+        auth=None,
+        operation_id=None,
+        operation=None,
+        examples=[
+            OpenApiExample(
+                "Description how to use the parameters",
+                description="In this route, at the very end, after the question mark,"
+                            + "separated by an ampersand, you can specify the following "
+                            + "parameters: page, is_active, and user_id. The page and "
+                            + "is_active parameters can change what is displayed for "
+                            + "any registered user, while the user_id parameter will change"
+                            + " what is displayed only if the user is an administrator.",
+                value={
+                    "id": 1,
+                    "borrow_date": "2026-06-19",
+                    "expected_return": "2026-06-20",
+                    "actual_return": "null or 2026-06-21",
+                    "book_id": {
+                        "id": 1,
+                        "title": "Titanic",
+                        "author": "Jamse Kameron",
+                        "cover": "Hard",
+                        "inventory": 6,
+                        "daily_fee": "1.00"
+                    },
+                    "user_id": 3
+                },
+            ),
+        ],
+    ),
+    post = extend_schema(
+        responses={201: BorrowingCreateSerializer},
+        description="Create a new borrowing"
+    )
+)
 class BorrowingsViewSet(generics.ListCreateAPIView):
     queryset = Borrowing.objects.all()
     permission_classes = [IsAuthenticated]
@@ -71,4 +147,3 @@ class BorrowingsReadViewSet(generics.RetrieveAPIView):
     permission_classes = [
         IsAuthenticated,
     ]
-

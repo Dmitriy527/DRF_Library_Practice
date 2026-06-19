@@ -12,8 +12,12 @@ cryptography==48.0.0
 Django==6.0.5
 djangorestframework==3.17.1
 djangorestframework_simplejwt==5.5.1
+drf-spectacular==0.29.0
 frozenlist==1.8.0
 idna==3.17
+inflection==0.5.1
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
 multidict==6.7.1
 mypy_extensions==1.1.0
 packaging==26.2
@@ -23,7 +27,11 @@ propcache==0.5.2
 pycparser==3.0
 PyJWT==2.13.0
 pytokens==0.4.1
+PyYAML==6.0.3
+referencing==0.37.0
+rpds-py==2026.5.1
 sqlparse==0.5.5
 typing_extensions==4.15.0
 tzdata==2026.2
+uritemplate==4.2.0
 yarl==1.24.2
