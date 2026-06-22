@@ -17,7 +17,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -62,7 +61,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "DRF_Library_Practice.urls"
+ROOT_URLCONF = "LibraryManagemant.urls"
 
 TEMPLATES = [
     {
@@ -79,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "DRF_Library_Practice.wsgi.application"
+WSGI_APPLICATION = "LibraryManagemant.wsgi.application"
 
 
 # Database
