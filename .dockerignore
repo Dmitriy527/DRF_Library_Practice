@@ -1,0 +1,15 @@
+.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+data/
+*.sqlite3
+*.db
+.git/
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore
