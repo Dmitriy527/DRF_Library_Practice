@@ -61,7 +61,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "DRF_Library_Practice.urls"
+ROOT_URLCONF = "LibraryManagemant.urls"
 
 TEMPLATES = [
     {
@@ -78,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "DRF_Library_Practice.wsgi.application"
+WSGI_APPLICATION = "LibraryManagemant.wsgi.application"
 
 
 # Database

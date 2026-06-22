@@ -1,74 +1,75 @@
 # DRF Library Practice
 
-RESTful API for library management with book, user, and borrowing systems. Built with Django Rest Framework, JWT authentication, and automatic Swagger documentation.
+RESTful API для управління бібліотекою з системами книг, користувачів та позик. Побудовано на Django Rest Framework з JWT аутентифікацією та автоматичною документацією Swagger.
 
 ---
 
-## 📋 Description
+## 📋 Опис
 
-The API allows you to:
+API дозволяє:
 
-- Manage the book collection (CRUD operations)
-- Register users and manage authentication
-- Create book borrowings with automatic inventory updates
-- Track active and completed borrowings
+- Керувати книжковим фондом (CRUD операції)
+- Реєструвати користувачів та керувати аутентифікацією
+- Оформлювати позики книг з автоматичним оновленням інвентаря
+- Відстежувати активні та завершені позики
 
 ---
 
-## 🛠 Technologies
+## 🛠 Технології
 
 - Python 3.12
 - Django 6.0.5
 - Django Rest Framework 3.17.1
-- Simple JWT 5.5.1 (authentication)
-- drf-spectacular 0.29.0 (Swagger/OpenAPI documentation)
-- SQLite (database)
+- Simple JWT 5.5.1 (аутентифікація)
+- drf-spectacular 0.29.0 (Swagger/OpenAPI документація)
+- SQLite (база даних)
 
 ---
 
-## 📦 Installation
+## 📦 Встановлення
 
-**1. Clone the repository:**
+**1. Клонуйте репозиторій:**
 
 ```bash
 git clone https://github.com/Dmitriy527/DRF_Library_Practice.git
 cd DRF_Library_Practice
 ```
 
-**2. Create and activate a virtual environment:**
+**2. Створіть та активуйте віртуальне середовище:**
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# or
+# або
 venv\Scripts\activate  # Windows
 ```
 
-**3. Install dependencies:**
+**3. Встановіть залежності:**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Create a `.env` file in the project root:**
+**4. Створіть файл `.env` в корені проекту:**
 
 ```env
 SECRET_KEY=your-secret-key-here
+DEBUG=True
 ```
 
-**5. Run migrations:**
+**5. Виконайте міграції:**
 
 ```bash
 python manage.py migrate
 ```
 
-**6. Create a superuser:**
+**6. Створіть суперкористувача:**
 
 ```bash
 python manage.py createsuperuser
 ```
 
-**7. Start the server:**
+**7. Запустіть сервер:**
 
 ```bash
 python manage.py runserver
@@ -76,20 +77,20 @@ python manage.py runserver
 
 ---
 
-## 🚀 API Endpoints
+## 🚀 API Ендпоінти
 
 ### 📚 Book Service
 
-| Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
-| `POST` | `/api/books/` | Add a new book | Staff only |
-| `GET` | `/api/books/` | Get book list (with pagination) | Everyone (including unauthenticated) |
-| `GET` | `/api/books/<id>/` | Get detailed book information | Everyone (including unauthenticated) |
-| `PUT/PATCH` | `/api/books/<id>/` | Update a book (including inventory) | Staff only |
-| `DELETE` | `/api/books/<id>/` | Delete a book | Staff only |
+| Метод | Ендпоінт | Опис | Доступ |
+|-------|----------|------|--------|
+| `POST` | `/api/books/` | Додати нову книгу | Тільки персонал |
+| `GET` | `/api/books/` | Отримати список книг (з пагінацією) | Всі (включаючи неавторизованих) |
+| `GET` | `/api/books/<id>/` | Отримати детальну інформацію про книгу | Всі (включаючи неавторизованих) |
+| `PUT/PATCH` | `/api/books/<id>/` | Оновити книгу (включаючи інвентар) | Тільки персонал |
+| `DELETE` | `/api/books/<id>/` | Видалити книгу | Тільки персонал |
 
 <details>
-<summary>Example response for <code>GET /api/books/</code></summary>
+<summary>Приклад відповіді <code>GET /api/books/</code></summary>
 
 ```json
 {
@@ -123,18 +124,18 @@ python manage.py runserver
 
 ### 👤 User Service
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/users/` | Register a new user |
-| `POST` | `/api/users/token/` | Obtain JWT tokens |
-| `POST` | `/api/users/token/refresh/` | Refresh JWT token |
-| `GET` | `/api/users/me/` | Get profile |
-| `PUT/PATCH` | `/api/users/me/` | Update profile |
+| Метод | Ендпоінт | Опис |
+|-------|----------|------|
+| `POST` | `/api/users/` | Реєстрація нового користувача |
+| `POST` | `/api/users/token/` | Отримати JWT токени |
+| `POST` | `/api/users/token/refresh/` | Оновити JWT токен |
+| `GET` | `/api/users/me/` | Отримати профіль |
+| `PUT/PATCH` | `/api/users/me/` | Оновити профіль |
 
 <details>
-<summary>Request examples</summary>
+<summary>Приклади запитів</summary>
 
-**Registration:**
+**Реєстрація:**
 
 ```json
 POST /api/users/
@@ -146,7 +147,7 @@ POST /api/users/
 }
 ```
 
-**Obtaining tokens:**
+**Отримання токенів:**
 
 ```json
 POST /api/users/token/
@@ -156,7 +157,7 @@ POST /api/users/token/
 }
 ```
 
-**Response:**
+**Відповідь:**
 
 ```json
 {
@@ -171,23 +172,23 @@ POST /api/users/token/
 
 ### 📖 Borrowings Service
 
-| Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
-| `POST` | `/api/borrowings/` | Create a borrowing (inventory -= 1) | Authenticated users |
-| `GET` | `/api/borrowings/` | Get borrowings with filtering (with pagination) | Authenticated users |
-| `GET` | `/api/borrowings/<id>/` | Get a specific borrowing | Authenticated users |
-| `POST` | `/api/borrowings/<id>/return/` | Return a book (inventory += 1) | Staff only |
-| `PUT/PATCH` | `/api/borrowings/<id>/` | Update return date | Staff only |
+| Метод | Ендпоінт | Опис | Доступ |
+|-------|----------|------|--------|
+| `POST` | `/api/borrowings/` | Оформити позику (інвентар -= 1) | Авторизовані користувачі |
+| `GET` | `/api/borrowings/` | Отримати позики з фільтрацією (з пагінацією) | Авторизовані користувачі |
+| `GET` | `/api/borrowings/<id>/` | Отримати конкретну позику | Авторизовані користувачі |
+| `POST` | `/api/borrowings/<id>/return/` | Повернути книгу (інвентар += 1) | Тільки персонал |
+| `PUT/PATCH` | `/api/borrowings/<id>/` | Оновити дату повернення | Тільки персонал |
 
-**Filter parameters for `GET /api/borrowings/`:**
+**Параметри фільтрації для `GET /api/borrowings/`:**
 
-- `?user_id=<int>` — filter by user
-- `?is_active=<bool>` — filter active/completed borrowings
+- `?user_id=<int>` — фільтр по користувачу
+- `?is_active=<bool>` — фільтр активних/завершених позик
 
 <details>
-<summary>Request and response examples</summary>
+<summary>Приклади запитів та відповідей</summary>
 
-**Creating a borrowing:**
+**Створення позики:**
 
 ```json
 POST /api/borrowings/
@@ -199,7 +200,7 @@ POST /api/borrowings/
 }
 ```
 
-**Updating the return date (staff only):**
+**Оновлення дати повернення (тільки для персоналу):**
 
 ```json
 PATCH /api/borrowings/1/
@@ -208,7 +209,7 @@ PATCH /api/borrowings/1/
 }
 ```
 
-**Response for `GET /api/borrowings/`:**
+**Відповідь `GET /api/borrowings/`:**
 
 ```json
 {
@@ -244,81 +245,74 @@ PATCH /api/borrowings/1/
 
 ---
 
-## 📚 API Documentation
+## 📚 Документація API
 
 - **Swagger UI:** [http://localhost:8000/api/schema/swagger-ui/](http://localhost:8000/api/schema/swagger-ui/)
 - **OpenAPI Schema:** [http://localhost:8000/api/schema/](http://localhost:8000/api/schema/)
 
 ---
 
-## 🧪 Testing
+## 🧪 Тестування
 
 ```bash
-# Run tests
+# Запуск тестів
 python manage.py test
 
-# With coverage
+# З покриттям
 coverage run manage.py test
 coverage report
 ```
 
 ---
 
-## 🔐 Authentication
+## 🔐 Аутентифікація
 
-The API uses JWT (JSON Web Tokens) for authentication. For protected endpoints, add the token to the header:
+API використовує JWT (JSON Web Tokens). Для захищених ендпоінтів додайте токен в заголовок:
 
 ```
 Authorization: Bearer <your_access_token>
 ```
 
-### User Roles
+### Ролі користувачів
 
-**Unauthenticated user:**
-- Can view the book list and detailed book information
-
-**Regular user:**
-- Can borrow books, create borrowings, view their own borrowings
-
-**Staff:**
-- Full access to CRUD operations for books
-- Can set the book return date (`actual_return`)
-- Can change the expected return date (`expected_return`)
-- Can edit borrowings
-- Can view all borrowings from all users
+| Роль | Можливості |
+|------|-----------|
+| **Неавторизований** | Перегляд списку книг та детальної інформації |
+| **Звичайний користувач** | Оформлення позик, перегляд своїх позик |
+| **Staff (персонал)** | Повний CRUD для книг, управління всіма позиками, внесення дати повернення, перегляд позик всіх користувачів |
 
 ---
 
-## 📝 Pagination
+## 📝 Пагінація
 
-The API uses pagination for book and borrowing lists:
+API використовує пагінацію для списків книг та позик:
 
-- **Page size:** 7 items per page
-- **Query parameter:** `?page=<page_number>`
-- **Example:** `/api/books/?page=2`
+- **Page size:** 7 елементів на сторінку
+- **Параметр запиту:** `?page=<номер_сторінки>`
+- **Приклад:** `/api/books/?page=2`
 
 ---
 
-## 📁 Project Structure
+## 📁 Структура проекту
 
 ```
 DRF_Library_Practice/
-├── book/               # Book application
+├── book/               # Додаток книг
 │   ├── models.py
 │   ├── serializers.py
 │   ├── views.py
 │   └── urls.py
-├── user/               # User application
+├── user/               # Додаток користувачів
 │   ├── models.py
 │   ├── serializers.py
 │   ├── views.py
 │   └── urls.py
-├── borrowings/         # Borrowings application
+├── borrowings/         # Додаток позик
 │   ├── models.py
 │   ├── serializers.py
 │   ├── views.py
 │   └── urls.py
-├── DRF_Library_Practice/ # Main Django config
+├── DRF_Library_Practice/ # Основний конфіг Django
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
@@ -328,7 +322,7 @@ DRF_Library_Practice/
 
 ---
 
-## 📞 Contacts
+## 📞 Контакти
 
-**Author:** [Dmitriy527](https://github.com/Dmitriy527)  
+**Автор:** [Dmitriy527](https://github.com/Dmitriy527)  
 **Email:** dimkanividimka@gmail.com

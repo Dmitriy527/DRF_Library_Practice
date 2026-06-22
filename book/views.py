@@ -16,5 +16,4 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self) -> object:
         if self.action == "list":
             return BookListSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
